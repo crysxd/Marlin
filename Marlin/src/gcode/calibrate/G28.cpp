@@ -106,6 +106,8 @@
       #if AXIS_HAS_STALLGUARD(Y2)
         tmc_disable_stallguard(stepperY2, stealth_states.y2);
       #endif
+      do_blocking_move_to_xy(-0.5 * x_axis_home_dir, -0.5 * home_dir(Y_AXIS), fr_mm_s / 2);
+      safe_delay(100);
     #endif
   }
 
@@ -118,7 +120,7 @@
     // Disallow Z homing if X or Y are unknown
     if (!TEST(axis_known_position, X_AXIS) || !TEST(axis_known_position, Y_AXIS)) {
       LCD_MESSAGEPGM(MSG_ERR_Z_HOMING);
-      SERIAL_ECHO_MSG(MSG_ERR_Z_HOMING_SER);
+      SERIAL_ECHO_MSG(STR_ERR_Z_HOMING_SER);
       return;
     }
 
@@ -154,7 +156,7 @@
     }
     else {
       LCD_MESSAGEPGM(MSG_ZPROBE_OUT);
-      SERIAL_ECHO_MSG(MSG_ZPROBE_OUT_SER);
+      SERIAL_ECHO_MSG(STR_ZPROBE_OUT_SER);
     }
 
     if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("<<< home_z_safely");
@@ -208,7 +210,7 @@
  *  Z   Home to the Z endstop
  *
  */
-void GcodeSuite::G28(const bool always_home_all) {
+void GcodeSuite::G28() {
   if (DEBUGGING(LEVELING)) {
     DEBUG_ECHOLNPGM(">>> G28");
     log_machine_info();
@@ -309,7 +311,6 @@ void GcodeSuite::G28(const bool always_home_all) {
   #if ENABLED(DELTA)
 
     home_delta();
-    UNUSED(always_home_all);
 
     #if ENABLED(IMPROVE_HOMING_RELIABILITY)
       end_slow_homing(slow_homing);
@@ -318,7 +319,7 @@ void GcodeSuite::G28(const bool always_home_all) {
   #else // NOT DELTA
 
     const bool homeX = parser.seen('X'), homeY = parser.seen('Y'), homeZ = parser.seen('Z'),
-               home_all = always_home_all || (homeX == homeY && homeX == homeZ),
+               home_all = homeX == homeY && homeX == homeZ, // All or None
                doX = home_all || homeX, doY = home_all || homeY, doZ = home_all || homeZ;
 
     destination = current_position;
@@ -529,7 +530,7 @@ void GcodeSuite::G28(const bool always_home_all) {
       #define _HOME_SYNC doZ        // Only for Z-axis
     #endif
     if (_HOME_SYNC)
-      SERIAL_ECHOLNPGM(MSG_Z_MOVE_COMP);
+      SERIAL_ECHOLNPGM(STR_Z_MOVE_COMP);
   #endif
 
   if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("<<< G28");

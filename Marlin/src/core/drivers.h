@@ -90,13 +90,15 @@
 
 // Test for supported TMC drivers that require advanced configuration
 // Does not match standalone configurations
-#define HAS_TRINAMIC (    HAS_DRIVER(TMC2130) \
-                       || HAS_DRIVER(TMC2160) \
-                       || HAS_DRIVER(TMC2208) \
-                       || HAS_DRIVER(TMC2209) \
-                       || HAS_DRIVER(TMC2660) \
-                       || HAS_DRIVER(TMC5130) \
-                       || HAS_DRIVER(TMC5160) )
+#define HAS_TRINAMIC_CONFIG (    HAS_DRIVER(TMC2130) \
+                              || HAS_DRIVER(TMC2160) \
+                              || HAS_DRIVER(TMC2208) \
+                              || HAS_DRIVER(TMC2209) \
+                              || HAS_DRIVER(TMC2660) \
+                              || HAS_DRIVER(TMC5130) \
+                              || HAS_DRIVER(TMC5160) )
+
+#define HAS_TRINAMIC HAS_TRINAMIC_CONFIG
 
 #define HAS_TRINAMIC_STANDALONE (    HAS_DRIVER(TMC2130_STANDALONE) \
                                   || HAS_DRIVER(TMC2208_STANDALONE) \
@@ -158,7 +160,7 @@
                                    || AXIS_DRIVER_TYPE(A,TMC5160) )
 
 #define _OR_EAH(N,T)    || AXIS_HAS_##T(E##N)
-#define E_AXIS_HAS(T)   (0 RREPEAT2(E_STEPPERS, _OR_EAH, T))
+#define E_AXIS_HAS(T)   (0 _OR_EAH(0,T) _OR_EAH(1,T) _OR_EAH(2,T) _OR_EAH(3,T) _OR_EAH(4,T) _OR_EAH(5,T) _OR_EAH(6,T) _OR_EAH(7,T))
 
 #define ANY_AXIS_HAS(T) (    AXIS_HAS_##T(X)  || AXIS_HAS_##T(X2) \
                           || AXIS_HAS_##T(Y)  || AXIS_HAS_##T(Y2) \

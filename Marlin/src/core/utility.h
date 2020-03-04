@@ -23,18 +23,16 @@
 
 #include "../inc/MarlinConfigPre.h"
 #include "../core/types.h"
+#include "../core/millis_t.h"
 
 // Delay that ensures heaters and watchdog are kept alive
 void safe_delay(millis_t ms);
 
-// A delay to provide brittle hosts time to receive bytes
-inline void serial_delay(const millis_t ms) {
-  #if ENABLED(SERIAL_OVERRUN_PROTECTION)
-    safe_delay(ms);
-  #else
-    UNUSED(ms);
-  #endif
-}
+#if ENABLED(SERIAL_OVERRUN_PROTECTION)
+  void serial_delay(const millis_t ms);
+#else
+  inline void serial_delay(const millis_t) {}
+#endif
 
 #if GRID_MAX_POINTS_X && GRID_MAX_POINTS_Y
 

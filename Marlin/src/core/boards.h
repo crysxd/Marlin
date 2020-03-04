@@ -141,6 +141,8 @@
 #define BOARD_EINSTART_S              1319  // Einstart retrofit
 #define BOARD_WANHAO_ONEPLUS          1320  // Wanhao 0ne+ i3 Mini
 #define BOARD_LEAPFROG_XEED2015       1321  // Leapfrog Xeed 2015
+#define BOARD_PICA_REVB               1322  // PICA Shield (original version)
+#define BOARD_PICA                    1323  // PICA Shield (rev C or later)
 
 //
 // ATmega1281, ATmega2561
@@ -335,8 +337,8 @@
 // Espressif ESP32 WiFi
 //
 #define BOARD_ESPRESSIF_ESP32         6000  // Generic ESP32
-#define BOARD_MRR_ESPA                6001
-#define BOARD_MRR_ESPE                6002
+#define BOARD_MRR_ESPA                6001  // MRR ESPA board based on ESP32 (native pins only)
+#define BOARD_MRR_ESPE                6002  // MRR ESPE board based on ESP32 (with I2S stepper stream)
 #define BOARD_E4D_BOX                 6003  // E4d@BOX
 
 //

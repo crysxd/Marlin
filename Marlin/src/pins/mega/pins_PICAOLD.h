@@ -20,34 +20,9 @@
  *
  */
 
-/**
- * stepper/indirection.cpp
- *
- * Stepper motor driver indirection to allow some stepper functions to
- * be done via SPI/I2c instead of direct pin manipulation.
- *
- * Copyright (c) 2015 Dominik Wenger
- */
+#define HEATER_0_PIN        9   // E0
+#define HEATER_1_PIN       10   // E1
+#define FAN_PIN            11
+#define FAN2_PIN           12
 
-#include "../../inc/MarlinConfig.h"
-#include "indirection.h"
-
-void restore_stepper_drivers() {
-  #if HAS_TRINAMIC_CONFIG
-    restore_trinamic_drivers();
-  #endif
-}
-
-void reset_stepper_drivers() {
-  #if HAS_DRIVER(TMC26X)
-    tmc26x_init_to_defaults();
-  #endif
-
-  #if HAS_L64XX
-    L64xxManager.init_to_defaults();
-  #endif
-
-  #if HAS_TRINAMIC_CONFIG
-    reset_trinamic_drivers();
-  #endif
-}
+#include "pins_PICA.h"

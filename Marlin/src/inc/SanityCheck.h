@@ -1361,8 +1361,8 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
  * Make sure Z_SAFE_HOMING point is reachable
  */
 #if ENABLED(Z_SAFE_HOMING)
-  static_assert(WITHIN(Z_SAFE_HOMING_X_POINT, X_MIN_BED, X_MAX_BED), "Z_SAFE_HOMING_X_POINT can't be reached by the nozzle.");
-  static_assert(WITHIN(Z_SAFE_HOMING_Y_POINT, Y_MIN_BED, Y_MAX_BED), "Z_SAFE_HOMING_Y_POINT can't be reached by the nozzle.");
+  static_assert(WITHIN(Z_SAFE_HOMING_X_POINT, X_MIN_POS, X_MAX_POS), "Z_SAFE_HOMING_X_POINT can't be reached by the nozzle.");
+  static_assert(WITHIN(Z_SAFE_HOMING_Y_POINT, Y_MIN_POS, Y_MAX_POS), "Z_SAFE_HOMING_Y_POINT can't be reached by the nozzle.");
 #endif
 
 /**
@@ -2150,6 +2150,47 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 #endif
 #undef INVALID_TMC_ADDRESS
 
+#define _TMC_MICROSTEP_IS_VALID(MS) (MS == 0 || MS == 2 || MS == 4 || MS == 8 || MS == 16 || MS == 32 || MS == 64 || MS == 128 || MS == 256)
+#define TMC_MICROSTEP_IS_VALID(M) (!AXIS_IS_TMC(M) || _TMC_MICROSTEP_IS_VALID(M##_MICROSTEPS))
+#define INVALID_TMC_MS(ST) static_assert(0, "Invalid " STRINGIFY(ST) "_MICROSTEPS. Valid values are 0, 2, 4, 8, 16, 32, 64, 128, and 256.")
+
+#if !TMC_MICROSTEP_IS_VALID(X)
+  INVALID_TMC_MS(X);
+#elif !TMC_MICROSTEP_IS_VALID(Y)
+  INVALID_TMC_MS(Y)
+#elif !TMC_MICROSTEP_IS_VALID(Z)
+  INVALID_TMC_MS(Z)
+#elif !TMC_MICROSTEP_IS_VALID(X2)
+  INVALID_TMC_MS(X2);
+#elif !TMC_MICROSTEP_IS_VALID(Y2)
+  INVALID_TMC_MS(Y2)
+#elif !TMC_MICROSTEP_IS_VALID(Z2)
+  INVALID_TMC_MS(Z2)
+#elif !TMC_MICROSTEP_IS_VALID(Z3)
+  INVALID_TMC_MS(Z3)
+#elif !TMC_MICROSTEP_IS_VALID(Z4)
+  INVALID_TMC_MS(Z4)
+#elif !TMC_MICROSTEP_IS_VALID(E0)
+  INVALID_TMC_MS(E0)
+#elif !TMC_MICROSTEP_IS_VALID(E1)
+  INVALID_TMC_MS(E1)
+#elif !TMC_MICROSTEP_IS_VALID(E2)
+  INVALID_TMC_MS(E2)
+#elif !TMC_MICROSTEP_IS_VALID(E3)
+  INVALID_TMC_MS(E3)
+#elif !TMC_MICROSTEP_IS_VALID(E4)
+  INVALID_TMC_MS(E4)
+#elif !TMC_MICROSTEP_IS_VALID(E5)
+  INVALID_TMC_MS(E5)
+#elif !TMC_MICROSTEP_IS_VALID(E6)
+  INVALID_TMC_MS(E6)
+#elif !TMC_MICROSTEP_IS_VALID(E7)
+  INVALID_TMC_MS(E7)
+#endif
+#undef INVALID_TMC_MS
+#undef TMC_MICROSTEP_IS_VALID
+#undef _TMC_MICROSTEP_IS_VALID
+
 #if ENABLED(DELTA) && (ENABLED(STEALTHCHOP_XY) != ENABLED(STEALTHCHOP_Z))
   #error "STEALTHCHOP_XY and STEALTHCHOP_Z must be the same on DELTA."
 #endif
@@ -2474,6 +2515,86 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
     constexpr char _chr5 = USER_GCODE_5[strlen(USER_GCODE_5) - 1];
     static_assert(_chr5 != '\n' && _chr5 != '\r', "USER_GCODE_5 cannot have a newline at the end. Please remove it.");
   #endif
+  #ifdef USER_GCODE_6
+    constexpr char _chr6 = USER_GCODE_6[strlen(USER_GCODE_6) - 1];
+    static_assert(_chr6 != '\n' && _chr6 != '\r', "USER_GCODE_6 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_7
+    constexpr char _chr7 = USER_GCODE_7[strlen(USER_GCODE_7) - 1];
+    static_assert(_chr7 != '\n' && _chr7 != '\r', "USER_GCODE_7 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_8
+    constexpr char _chr8 = USER_GCODE_8[strlen(USER_GCODE_8) - 1];
+    static_assert(_chr8 != '\n' && _chr8 != '\r', "USER_GCODE_8 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_9
+    constexpr char _chr9 = USER_GCODE_9[strlen(USER_GCODE_9) - 1];
+    static_assert(_chr9 != '\n' && _chr9 != '\r', "USER_GCODE_9 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_10
+    constexpr char _chr10 = USER_GCODE_10[strlen(USER_GCODE_10) - 1];
+    static_assert(_chr10 != '\n' && _chr10 != '\r', "USER_GCODE_10 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_11
+    constexpr char _chr11 = USER_GCODE_11[strlen(USER_GCODE_11) - 1];
+    static_assert(_chr11 != '\n' && _chr11 != '\r', "USER_GCODE_11 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_12
+    constexpr char _chr12 = USER_GCODE_12[strlen(USER_GCODE_12) - 1];
+    static_assert(_chr12 != '\n' && _chr12 != '\r', "USER_GCODE_12 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_13
+    constexpr char _chr13 = USER_GCODE_13[strlen(USER_GCODE_13) - 1];
+    static_assert(_chr13 != '\n' && _chr13 != '\r', "USER_GCODE_13 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_14
+    constexpr char _chr14 = USER_GCODE_14[strlen(USER_GCODE_14) - 1];
+    static_assert(_chr14 != '\n' && _chr14 != '\r', "USER_GCODE_14 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_15
+    constexpr char _chr15 = USER_GCODE_15[strlen(USER_GCODE_15) - 1];
+    static_assert(_chr15 != '\n' && _chr15 != '\r', "USER_GCODE_15 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_16
+    constexpr char _chr16 = USER_GCODE_16[strlen(USER_GCODE_16) - 1];
+    static_assert(_chr16 != '\n' && _chr16 != '\r', "USER_GCODE_16 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_17
+    constexpr char _chr17 = USER_GCODE_17[strlen(USER_GCODE_17) - 1];
+    static_assert(_chr17 != '\n' && _chr17 != '\r', "USER_GCODE_17 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_18
+    constexpr char _chr18 = USER_GCODE_18[strlen(USER_GCODE_18) - 1];
+    static_assert(_chr18 != '\n' && _chr18 != '\r', "USER_GCODE_18 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_19
+    constexpr char _chr19 = USER_GCODE_19[strlen(USER_GCODE_19) - 1];
+    static_assert(_chr19 != '\n' && _chr19 != '\r', "USER_GCODE_19 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_20
+    constexpr char _chr20 = USER_GCODE_20[strlen(USER_GCODE_20) - 1];
+    static_assert(_chr20 != '\n' && _chr20 != '\r', "USER_GCODE_20 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_21
+    constexpr char _chr21 = USER_GCODE_21[strlen(USER_GCODE_21) - 1];
+    static_assert(_chr21 != '\n' && _chr21 != '\r', "USER_GCODE_21 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_22
+    constexpr char _chr22 = USER_GCODE_22[strlen(USER_GCODE_22) - 1];
+    static_assert(_chr22 != '\n' && _chr22 != '\r', "USER_GCODE_22 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_23
+    constexpr char _chr23 = USER_GCODE_23[strlen(USER_GCODE_23) - 1];
+    static_assert(_chr23 != '\n' && _chr23 != '\r', "USER_GCODE_23 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_24
+    constexpr char _chr24 = USER_GCODE_24[strlen(USER_GCODE_24) - 1];
+    static_assert(_chr24 != '\n' && _chr24 != '\r', "USER_GCODE_24 cannot have a newline at the end. Please remove it.");
+  #endif
+  #ifdef USER_GCODE_25
+    constexpr char _chr25 = USER_GCODE_25[strlen(USER_GCODE_25) - 1];
+    static_assert(_chr25 != '\n' && _chr25 != '\r', "USER_GCODE_25 cannot have a newline at the end. Please remove it.");
+  #endif
 #endif
 
 #if ENABLED(BACKLASH_COMPENSATION)
@@ -2651,4 +2772,9 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
  */
 #if HAS_TMC_SPI && ALL(MONITOR_DRIVER_STATUS, SDSUPPORT, USES_SHARED_SPI)
   #error "MONITOR_DRIVER_STATUS and SDSUPPORT cannot be used together on boards with shared SPI."
+#endif
+
+// G60/G61 Position Save
+#if SAVED_POSITIONS > 256
+  #error "SAVED_POSITIONS must be an integer from 0 to 256."
 #endif

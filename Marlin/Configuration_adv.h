@@ -214,8 +214,10 @@
   #define AUTOTEMP_OLDWEIGHT 0.98
 #endif
 
-// Show extra position information with 'M114 D'
-//#define M114_DETAIL
+// Extra options for the M114 "Current Position" report
+//#define M114_DETAIL         // Use 'M114` for details to check planner calculations
+//#define M114_REALTIME       // Real current position based on forward kinematics
+//#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
 // Show Temperature ADC value
 // Enable for M105 to include ADC values read from temperature sensors.
@@ -957,12 +959,16 @@
    * during SD printing. If the recovery file is found at boot time, present
    * an option on the LCD screen to continue the print from the last-known
    * point in the file.
+   *
+   * If the machine reboots when resuming a print you may need to replace or
+   * reformat the SD card. (Bad sectors delay startup triggering the watchdog.)
    */
   //#define POWER_LOSS_RECOVERY
   #if ENABLED(POWER_LOSS_RECOVERY)
+    //#define PLR_ENABLED_DEFAULT  true // Power Loss Recovery enabled by default. (Set with 'M413 Sn' & M500)
     //#define BACKUP_POWER_SUPPLY       // Backup power / UPS to move the steppers on power loss
     //#define POWER_LOSS_ZRAISE       2 // (mm) Z axis raise on resume (on power loss with UPS)
-    //#define POWER_LOSS_PIN         44 // Pin to detect power loss
+    //#define POWER_LOSS_PIN         44 // Pin to detect power loss. Set to -1 to disable default pin on boards without module.
     //#define POWER_LOSS_STATE     HIGH // State of pin indicating power loss
     //#define POWER_LOSS_PULL           // Set pullup / pulldown as appropriate
     //#define POWER_LOSS_PURGE_LEN   20 // (mm) Length of filament to purge on resume
@@ -1090,18 +1096,16 @@
   // Add an optimized binary file transfer mode, initiated with 'M28 B1'
   //#define BINARY_FILE_TRANSFER
 
-  #if HAS_SDCARD_CONNECTION
-    /**
-     * Set this option to one of the following (or the board's defaults apply):
-     *
-     *           LCD - Use the SD drive in the external LCD controller.
-     *       ONBOARD - Use the SD drive on the control board. (No SD_DETECT_PIN. M21 to init.)
-     *  CUSTOM_CABLE - Use a custom cable to access the SD (as defined in a pins file).
-     *
-     * :[ 'LCD', 'ONBOARD', 'CUSTOM_CABLE' ]
-     */
-    //#define SDCARD_CONNECTION LCD
-  #endif
+  /**
+   * Set this option to one of the following (or the board's defaults apply):
+   *
+   *           LCD - Use the SD drive in the external LCD controller.
+   *       ONBOARD - Use the SD drive on the control board. (No SD_DETECT_PIN. M21 to init.)
+   *  CUSTOM_CABLE - Use a custom cable to access the SD (as defined in a pins file).
+   *
+   * :[ 'LCD', 'ONBOARD', 'CUSTOM_CABLE' ]
+   */
+  //#define SDCARD_CONNECTION LCD
 
 #endif // SDSUPPORT
 
@@ -1178,6 +1182,7 @@
   #define STATUS_HOTEND_ANIM          // Use a second bitmap to indicate hotend heating
   #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating
   #define STATUS_CHAMBER_ANIM         // Use a second bitmap to indicate chamber heating
+  //#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
   //#define STATUS_ALT_BED_BITMAP     // Use the alternative bed bitmap
   //#define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
   //#define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Number of fan animation frames
@@ -1320,6 +1325,7 @@
  */
 #define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
+  //#define INTEGRATED_BABYSTEPPING         // EXPERIMENTAL integration of babystepping into the Stepper ISR
   //#define BABYSTEP_WITHOUT_HOMING
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false           // Change if Z babysteps should go the other way
@@ -1433,6 +1439,38 @@
   #define G29_RECOVER_COMMANDS "M117 Probe failed. Rewiping.\nG28\nG12 P0 S12 T0"
   #define G29_FAILURE_COMMANDS "M117 Bed leveling failed.\nG0 Z10\nM300 P25 S880\nM300 P50 S0\nM300 P25 S880\nM300 P50 S0\nM300 P25 S880\nM300 P50 S0\nG4 S1"
 
+#endif
+
+/**
+ * Thermal Probe Compensation
+ * Probe measurements are adjusted to compensate for temperature distortion.
+ * Use G76 to calibrate this feature. Use M871 to set values manually.
+ * For a more detailed explanation of the process see G76_M871.cpp.
+ */
+#if HAS_BED_PROBE && TEMP_SENSOR_PROBE && TEMP_SENSOR_BED
+  // Enable thermal first layer compensation using bed and probe temperatures
+  #define PROBE_TEMP_COMPENSATION
+
+  // Add additional compensation depending on hotend temperature
+  // Note: this values cannot be calibrated and have to be set manually
+  #if ENABLED(PROBE_TEMP_COMPENSATION)
+    // Max temperature that can be reached by heated bed.
+    // This is required only for the calibration process.
+    #define PTC_MAX_BED_TEMP BED_MAXTEMP
+
+    // Park position to wait for probe cooldown
+    #define PTC_PARK_POS_X 0.0F
+    #define PTC_PARK_POS_Y 0.0F
+    #define PTC_PARK_POS_Z 100.0F
+
+    // Probe position to probe and wait for probe to reach target temperature
+    #define PTC_PROBE_POS_X  90.0F
+    #define PTC_PROBE_POS_Y 100.0F
+
+    // Enable additional compensation using hotend temperature
+    // Note: this values cannot be calibrated automatically but have to be set manually
+    //#define USE_TEMP_EXT_COMPENSATION
+  #endif
 #endif
 
 // @section extras
@@ -1826,7 +1864,7 @@
  * TMCStepper library is required to use TMC stepper drivers.
  * https://github.com/teemuatlut/TMCStepper
  */
-#if HAS_TRINAMIC
+#if HAS_TRINAMIC_CONFIG
 
   #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
@@ -2129,7 +2167,7 @@
    */
   #define TMC_ADV() {  }
 
-#endif // HAS_TRINAMIC
+#endif // HAS_TRINAMIC_CONFIG
 
 // @section L6470
 
@@ -2505,6 +2543,8 @@
 #if ENABLED(FASTER_GCODE_PARSER)
   //#define GCODE_QUOTED_STRINGS  // Support for quoted string parameters
 #endif
+
+//#define GCODE_CASE_INSENSITIVE  // Accept G-code sent to the firmware in lowercase
 
 /**
  * CNC G-code options

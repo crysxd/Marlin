@@ -75,7 +75,7 @@
   #define IFSD(A,B) (B)
 #endif
 
-#if HAS_TRINAMIC
+#if HAS_TRINAMIC_CONFIG
   #include "../../feature/tmc_util.h"
   #include "../../module/stepper/indirection.h"
 #endif
@@ -445,7 +445,7 @@ namespace ExtUI {
     void setSoftEndstopState(const bool value) { soft_endstops_enabled = value; }
   #endif
 
-  #if HAS_TRINAMIC
+  #if HAS_TRINAMIC_CONFIG
     float getAxisCurrent_mA(const axis_t axis) {
       switch (axis) {
         #if AXIS_IS_TMC(X)
@@ -785,7 +785,7 @@ namespace ExtUI {
     #if HAS_BED_PROBE
       return probe.offset.z;
     #elif ENABLED(BABYSTEP_DISPLAY_TOTAL)
-      return (planner.steps_to_mm[Z_AXIS] * babystep.axis_total[BS_TODO_AXIS(Z_AXIS)]);
+      return (planner.steps_to_mm[Z_AXIS] * babystep.axis_total[BS_AXIS_IND(Z_AXIS)]);
     #else
       return 0.0;
     #endif
@@ -898,11 +898,11 @@ namespace ExtUI {
     float getPIDValues_Kp(const extruder_t tool) {
       return PID_PARAM(Kp, tool);
     }
-    
+
     float getPIDValues_Ki(const extruder_t tool) {
       return unscalePID_i(PID_PARAM(Ki, tool));
     }
-    
+
     float getPIDValues_Kd(const extruder_t tool) {
       return unscalePID_d(PID_PARAM(Kd, tool));
     }
@@ -918,27 +918,27 @@ namespace ExtUI {
       thermalManager.PID_autotune(temp, (heater_ind_t)tool, 8, true);
     }
   #endif
-  
+
   #if ENABLED(PIDTEMPBED)
     float getBedPIDValues_Kp() {
       return thermalManager.temp_bed.pid.Kp;
     }
-    
+
     float getBedPIDValues_Ki() {
       return unscalePID_i(thermalManager.temp_bed.pid.Ki);
     }
-    
+
     float getBedPIDValues_Kd() {
       return unscalePID_d(thermalManager.temp_bed.pid.Kd);
     }
-    
+
     void setBedPIDValues(const float p, const float i, const float d) {
       thermalManager.temp_bed.pid.Kp = p;
       thermalManager.temp_bed.pid.Ki = scalePID_i(i);
       thermalManager.temp_bed.pid.Kd = scalePID_d(d);
       thermalManager.updatePID();
     }
-    
+
     void startBedPIDTune(const float temp) {
       thermalManager.PID_autotune(temp, H_BED, 4, true);
     }
