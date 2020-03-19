@@ -188,6 +188,8 @@
   #include "ramps/pins_TANGO.h"                 // ATmega2560                             env:mega2560
 #elif MB(MKS_GEN_L_V2)
   #include "ramps/pins_MKS_GEN_L_V2.h"          // ATmega2560                             env:mega2560
+#elif MB(COPYMASTER_3D)
+  #include "ramps/pins_COPYMASTER_3D.h"         // ATmega2560                             env:mega2560
 
 //
 // RAMBo and derivatives
@@ -862,6 +864,43 @@
   #define E7_ENABLE_PIN -1
 #endif
 
+//
+// Destroy unused CS pins
+//
+#if !AXIS_HAS_SPI(X)
+  #undef X_CS_PIN
+#endif
+#if !AXIS_HAS_SPI(Y)
+  #undef Y_CS_PIN
+#endif
+#if !AXIS_HAS_SPI(Z)
+  #undef Z_CS_PIN
+#endif
+#if E_STEPPERS && !AXIS_HAS_SPI(E0)
+  #undef E0_CS_PIN
+#endif
+#if E_STEPPERS > 1 && !AXIS_HAS_SPI(E1)
+  #undef E1_CS_PIN
+#endif
+#if E_STEPPERS > 2 && !AXIS_HAS_SPI(E2)
+  #undef E2_CS_PIN
+#endif
+#if E_STEPPERS > 3 && !AXIS_HAS_SPI(E3)
+  #undef E3_CS_PIN
+#endif
+#if E_STEPPERS > 4 && !AXIS_HAS_SPI(E4)
+  #undef E4_CS_PIN
+#endif
+#if E_STEPPERS > 5 && !AXIS_HAS_SPI(E5)
+  #undef E5_CS_PIN
+#endif
+#if E_STEPPERS > 6 && !AXIS_HAS_SPI(E6)
+  #undef E6_CS_PIN
+#endif
+#if E_STEPPERS > 7 && !AXIS_HAS_SPI(E7)
+  #undef E7_CS_PIN
+#endif
+
 #ifndef X_CS_PIN
   #define X_CS_PIN -1
 #endif
@@ -1170,6 +1209,9 @@
 
 #if HAS_FILAMENT_SENSOR
   #define FIL_RUNOUT1_PIN FIL_RUNOUT_PIN
+#else
+  #undef FIL_RUNOUT_PIN
+  #undef FIL_RUNOUT1_PIN
 #endif
 
 #ifndef LCD_PINS_D4
