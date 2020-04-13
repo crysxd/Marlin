@@ -31,7 +31,7 @@
  * -----------------
  *
  * Helpful G-code references:
- *  - https://marlinfw.org/meta/gcode
+ *  - http://marlinfw.org/meta/gcode
  *  - https://reprap.org/wiki/G-code
  *  - http://linuxcnc.org/docs/html/gcode.html
  *
@@ -966,10 +966,6 @@ private:
   #if ENABLED(POWER_LOSS_RECOVERY)
     static void M413();
     static void M1000();
-  #endif
-
-  #if ENABLED(SDSUPPORT)
-    static void M1001();
   #endif
 
   #if ENABLED(MAX7219_GCODE)

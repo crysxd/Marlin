@@ -36,12 +36,10 @@ void BioConfirmHomeXYZ::onRedraw(draw_mode_t) {
 bool BioConfirmHomeXYZ::onTouchEnd(uint8_t tag) {
   switch (tag) {
     case 1:
-      #ifdef PARK_AND_RELEASE_COMMANDS
-        SpinnerDialogBox::enqueueAndWait_P(F(
-         "G28\n"
-         PARK_AND_RELEASE_COMMANDS
-        ));
-      #endif
+      SpinnerDialogBox::enqueueAndWait_P(F(
+       "G28\n"
+       PARK_AND_RELEASE_COMMANDS
+      ));
       current_screen.forget();
       break;
     case 2:

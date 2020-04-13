@@ -25,7 +25,7 @@
  * Standard Marlin Status Screen bitmaps
  *
  * Use the Marlin Bitmap Converter to make your own:
- * https://marlinfw.org/tools/u8glib/converter.html
+ * http://marlinfw.org/tools/u8glib/converter.html
  */
 
 #include "../../inc/MarlinConfig.h"

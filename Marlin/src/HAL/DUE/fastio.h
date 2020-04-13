@@ -166,7 +166,7 @@
 // Set pin as output (wrapper) -  reads the pin and sets the output to that value
 #define SET_OUTPUT(IO)       _SET_OUTPUT(IO)
 // Set pin as PWM
-#define SET_PWM               SET_OUTPUT
+#define SET_PWM(IO)           SET_OUTPUT(IO)
 
 // Check if pin is an input
 #define IS_INPUT(IO)         ((digitalPinToPort(IO)->PIO_OSR & digitalPinToBitMask(IO)) == 0)

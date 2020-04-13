@@ -331,126 +331,115 @@ enum StealthIndex : uint8_t { STEALTH_AXIS_XY, STEALTH_AXIS_Z, STEALTH_AXIS_E };
     #endif
   #endif
 
-  enum TMCAxis : uint8_t { X, Y, Z, X2, Y2, Z2, Z3, Z4, E0, E1, E2, E3, E4, E5, E6, E7, TOTAL };
-
   void tmc_serial_begin() {
-    struct {
-      const void *ptr[TMCAxis::TOTAL];
-      bool began(const TMCAxis a, const void * const p) {
-        LOOP_L_N(i, a) if (p == ptr[i]) return true;
-        ptr[a] = p; return false;
-      };
-    } sp_helper;
-    #define HW_SERIAL_BEGIN(A) do{ if (!sp_helper.began(TMCAxis::A, &A##_HARDWARE_SERIAL)) \
-                                         A##_HARDWARE_SERIAL.begin(TMC_BAUD_RATE); }while(0)
     #if AXIS_HAS_UART(X)
       #ifdef X_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(X);
+        X_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperX.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(X2)
       #ifdef X2_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(X2);
+        X2_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperX2.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(Y)
       #ifdef Y_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(Y);
+        Y_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperY.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(Y2)
       #ifdef Y2_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(Y2);
+        Y2_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperY2.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(Z)
       #ifdef Z_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(Z);
+        Z_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperZ.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(Z2)
       #ifdef Z2_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(Z2);
+        Z2_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperZ2.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(Z3)
       #ifdef Z3_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(Z3);
+        Z3_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperZ3.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(Z4)
       #ifdef Z4_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(Z4);
+        Z4_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperZ4.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E0)
       #ifdef E0_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E0);
+        E0_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE0.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E1)
       #ifdef E1_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E1);
+        E1_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE1.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E2)
       #ifdef E2_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E2);
+        E2_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE2.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E3)
       #ifdef E3_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E3);
+        E3_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE3.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E4)
       #ifdef E4_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E4);
+        E4_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE4.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E5)
       #ifdef E5_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E5);
+        E5_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE5.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E6)
       #ifdef E6_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E6);
+        E6_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE6.beginSerial(TMC_BAUD_RATE);
       #endif
     #endif
     #if AXIS_HAS_UART(E7)
       #ifdef E7_HARDWARE_SERIAL
-        HW_SERIAL_BEGIN(E7);
+        E7_HARDWARE_SERIAL.begin(TMC_BAUD_RATE);
       #else
         stepperE7.beginSerial(TMC_BAUD_RATE);
       #endif

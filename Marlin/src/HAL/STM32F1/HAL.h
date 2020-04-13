@@ -160,7 +160,6 @@ void HAL_idletask();
 
 #ifndef digitalPinHasPWM
   #define digitalPinHasPWM(P) (PIN_MAP[P].timer_device != nullptr)
-  #define NO_COMPILE_TIME_PWM
 #endif
 
 #define CRITICAL_SECTION_START()  uint32_t primask = __get_primask(); (void)__iCliRetVal()
@@ -288,4 +287,4 @@ void analogWrite(pin_t pin, int pwm_val8); // PWM only! mul by 257 in maple!?
 #define JTAGSWD_DISABLE() afio_cfg_debug_ports(AFIO_DEBUG_NONE)
 
 #define PLATFORM_M997_SUPPORT
-void flashFirmware(const int16_t);
+void flashFirmware(int16_t value);

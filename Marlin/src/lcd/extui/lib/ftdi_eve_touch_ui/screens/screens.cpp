@@ -56,9 +56,6 @@ SCREEN_TABLE {
 #if ENABLED(BABYSTEPPING)
   DECL_SCREEN(NudgeNozzleScreen),
 #endif
-#if HAS_MESH
-  DECL_SCREEN(BedMeshScreen),
-#endif
   DECL_SCREEN(MoveAxisScreen),
   DECL_SCREEN(StepsScreen),
 #if HAS_TRINAMIC_CONFIG
@@ -108,7 +105,6 @@ SCREEN_TABLE {
   DECL_SCREEN(BioConfirmHomeE),
 #endif
 #if ENABLED(TOUCH_UI_COCOA_PRESS)
-  DECL_SCREEN(PreheatMenu),
   DECL_SCREEN(PreheatTimerScreen),
 #endif
 #if ENABLED(TOUCH_UI_DEVELOPER_MENU)

@@ -707,13 +707,14 @@ void MMU2::filament_runout() {
     if (recover)  {
       LCD_MESSAGEPGM(MSG_MMU2_EJECT_RECOVER);
       BUZZ(200, 404);
+      wait_for_user = true;
       #if ENABLED(HOST_PROMPT_SUPPORT)
         host_prompt_do(PROMPT_USER_CONTINUE, PSTR("MMU2 Eject Recover"), CONTINUE_STR);
       #endif
       #if ENABLED(EXTENSIBLE_UI)
         ExtUI::onUserConfirmRequired_P(PSTR("MMU2 Eject Recover"));
       #endif
-      wait_for_user_response();
+      while (wait_for_user) idle();
       BUZZ(200, 404);
       BUZZ(200, 404);
 

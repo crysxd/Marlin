@@ -29,7 +29,9 @@
  * The latest version of this library can always be found at
  * http://arduiniana.org.
  */
-#pragma once
+
+#ifndef SOFTWARESERIAL_H
+#define SOFTWARESERIAL_H
 
 #include <Arduino.h>
 
@@ -62,6 +64,7 @@ class SoftwareSerial : public Stream {
     uint32_t delta_start = 0;
 
     // static data
+    static bool initialised;
     static HardwareTimer timer;
     static const IRQn_Type timer_interrupt_number;
     static uint32_t timer_interrupt_priority;
@@ -88,7 +91,7 @@ class SoftwareSerial : public Stream {
   public:
     // public methods
 
-    SoftwareSerial(uint16_t receivePin, uint16_t transmitPin, bool inverse_logic=false);
+    SoftwareSerial(uint16_t receivePin, uint16_t transmitPin, bool inverse_logic = false);
     virtual ~SoftwareSerial();
     void begin(long speed);
     bool listen();
@@ -112,3 +115,5 @@ class SoftwareSerial : public Stream {
 
     using Print::write;
 };
+
+#endif // SOFTWARESERIAL_H

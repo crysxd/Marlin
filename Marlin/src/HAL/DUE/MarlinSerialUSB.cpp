@@ -29,7 +29,7 @@
 
 #include "../../inc/MarlinConfig.h"
 
-#if HAS_USB_SERIAL
+#if SERIAL_PORT == -1
 
 #include "MarlinSerialUSB.h"
 
@@ -283,12 +283,8 @@ void MarlinSerialUSB::printFloat(double number, uint8_t digits) {
 }
 
 // Preinstantiate
-#if SERIAL_PORT == -1
-  MarlinSerialUSB customizedSerial1;
-#endif
-#if SERIAL_PORT_2 == -1
-  MarlinSerialUSB customizedSerial2;
-#endif
+MarlinSerialUSB customizedSerial1;
 
-#endif // HAS_USB_SERIAL
+#endif // SERIAL_PORT == -1
+
 #endif // ARDUINO_ARCH_SAM

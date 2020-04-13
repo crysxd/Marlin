@@ -155,18 +155,21 @@ void GcodeSuite::M420() {
 
             // Get the sum and average of all mesh values
             float mesh_sum = 0;
-            GRID_LOOP(x, y) mesh_sum += Z_VALUES(x, y);
+            for (uint8_t x = GRID_MAX_POINTS_X; x--;)
+              for (uint8_t y = GRID_MAX_POINTS_Y; y--;)
+                mesh_sum += Z_VALUES(x, y);
             const float zmean = mesh_sum / float(GRID_MAX_POINTS);
 
           #else
 
             // Find the low and high mesh values
             float lo_val = 100, hi_val = -100;
-            GRID_LOOP(x, y) {
-              const float z = Z_VALUES(x, y);
-              NOMORE(lo_val, z);
-              NOLESS(hi_val, z);
-            }
+            for (uint8_t x = GRID_MAX_POINTS_X; x--;)
+              for (uint8_t y = GRID_MAX_POINTS_Y; y--;) {
+                const float z = Z_VALUES(x, y);
+                NOMORE(lo_val, z);
+                NOLESS(hi_val, z);
+              }
             // Take the mean of the lowest and highest
             const float zmean = (lo_val + hi_val) / 2.0 + cval;
 
@@ -176,12 +179,13 @@ void GcodeSuite::M420() {
           if (!NEAR_ZERO(zmean)) {
             set_bed_leveling_enabled(false);
             // Subtract the mean from all values
-            GRID_LOOP(x, y) {
-              Z_VALUES(x, y) -= zmean;
-              #if ENABLED(EXTENSIBLE_UI)
-                ExtUI::onMeshUpdate(x, y, Z_VALUES(x, y));
-              #endif
-            }
+            for (uint8_t x = GRID_MAX_POINTS_X; x--;)
+              for (uint8_t y = GRID_MAX_POINTS_Y; y--;) {
+                Z_VALUES(x, y) -= zmean;
+                #if ENABLED(EXTENSIBLE_UI)
+                  ExtUI::onMeshUpdate(x, y, Z_VALUES(x, y));
+                #endif
+              }
             #if ENABLED(ABL_BILINEAR_SUBDIVISION)
               bed_level_virt_interpolate();
             #endif
