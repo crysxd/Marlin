@@ -25,7 +25,7 @@
  * Turkish
  *
  * LCD Menu Messages
- * See also http://marlinfw.org/docs/development/lcd_language.html
+ * See also https://marlinfw.org/docs/development/lcd_language.html
  *
  * Bu çeviri dosyasındaki sorunlar ve düzeltmeler için iletişim;
  * Contact for issues and corrections in this translation file;
@@ -191,8 +191,8 @@ namespace Language_tr {
   PROGMEM Language_Str MSG_UBL_STORAGE_SLOT                = _UxGT("Bellek Yuvası");
   PROGMEM Language_Str MSG_UBL_LOAD_MESH                   = _UxGT("Yatak Mesh Yükle");
   PROGMEM Language_Str MSG_UBL_SAVE_MESH                   = _UxGT("Yatak Mesh Kayıt Et");
-  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("M117 Mesh %i yüklendi");
-  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("M117 Mesh %i kayıtlandı");
+  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("Mesh %i yüklendi");
+  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("Mesh %i kayıtlandı");
   PROGMEM Language_Str MSG_UBL_NO_STORAGE                  = _UxGT("Depolama Yok");
   PROGMEM Language_Str MSG_UBL_SAVE_ERROR                  = _UxGT("Hata: UBL Kayıt");
   PROGMEM Language_Str MSG_UBL_RESTORE_ERROR               = _UxGT("Hata: UBL Yenileme");
@@ -549,10 +549,6 @@ namespace Language_tr {
   PROGMEM Language_Str MSG_SNAKE                           = _UxGT("Sn4k3");
   PROGMEM Language_Str MSG_MAZE                            = _UxGT("Maze");
 
-  #define MSG_1_LINE(A)     A "\0"   "\0"
-  #define MSG_2_LINE(A,B)   A "\0" B "\0"
-  #define MSG_3_LINE(A,B,C) A "\0" B "\0" C
-
   //
   // Filament Değişim ekranları 4 satırlı ekranda 3 satıra kadar gösterilir
   //                        ...veya 3 satırlı ekranda 2 satıra kadar
@@ -560,7 +556,7 @@ namespace Language_tr {
   #if LCD_HEIGHT >= 4
 
     PROGMEM Language_Str MSG_ADVANCED_PAUSE_WAITING        = _UxGT(MSG_2_LINE("Baskıya devam etmek", "için Butona bas"));
-    PROGMEM Language_Str MSG_PAUSE_PRINT_INIT              = _UxGT(MSG_1_LINE("Park Ediliyor..."));
+    PROGMEM Language_Str MSG_PAUSE_PRINT_PARKING           = _UxGT(MSG_1_LINE("Park Ediliyor..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INIT          = _UxGT(MSG_3_LINE("Filaman değişimi", "için başlama", "bekleniyor"));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INSERT        = _UxGT(MSG_3_LINE("Filamanı yükle", "ve devam için", "tuşa bas..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_HEAT          = _UxGT(MSG_2_LINE("Nozulü Isıtmak için", "Butona Bas."));
@@ -572,7 +568,7 @@ namespace Language_tr {
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_RESUME        = _UxGT(MSG_2_LINE("Baskının devam ", "etmesi için bekle"));
   #else
     PROGMEM Language_Str MSG_ADVANCED_PAUSE_WAITING        = _UxGT(MSG_1_LINE("Sürdürmek İçin Tıkla"));
-    PROGMEM Language_Str MSG_PAUSE_PRINT_INIT              = _UxGT(MSG_1_LINE("Park Ediliyor..."));
+    PROGMEM Language_Str MSG_PAUSE_PRINT_PARKING           = _UxGT(MSG_1_LINE("Park Ediliyor..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INIT          = _UxGT(MSG_1_LINE("Lütfen bekleyiniz..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INSERT        = _UxGT(MSG_1_LINE("Yükle ve bas"));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_HEAT          = _UxGT(MSG_1_LINE("Isıtmak için Tıkla"));
@@ -606,4 +602,3 @@ namespace Language_tr {
   #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED_N
   #define MSG_FIRST_EXTRA_FAN_SPEED MSG_EXTRA_FAN_SPEED_N
 #endif
- 

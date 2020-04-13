@@ -26,7 +26,7 @@
  * UTF-8 for Graphical Display
  *
  * LCD Menu Messages
- * See also http://marlinfw.org/docs/development/lcd_language.html
+ * See also https://marlinfw.org/docs/development/lcd_language.html
  *
  * Translated by Petr Zahradnik, Computer Laboratory
  * Blog and video blog Zahradnik se bavi
@@ -197,8 +197,8 @@ namespace Language_cz {
   PROGMEM Language_Str MSG_UBL_STORAGE_SLOT                = _UxGT("Paměťový slot");
   PROGMEM Language_Str MSG_UBL_LOAD_MESH                   = _UxGT("Načíst síť bodů");
   PROGMEM Language_Str MSG_UBL_SAVE_MESH                   = _UxGT("Uložit síť bodů");
-  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("M117 Síť %i načtena");
-  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("M117 Síť %i uložena");
+  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("Síť %i načtena");
+  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("Síť %i uložena");
   PROGMEM Language_Str MSG_UBL_NO_STORAGE                  = _UxGT("Nedostatek místa");
   PROGMEM Language_Str MSG_UBL_SAVE_ERROR                  = _UxGT("Ch.: Uložit UBL");
   PROGMEM Language_Str MSG_UBL_RESTORE_ERROR               = _UxGT("Ch.: Obnovit UBL");
@@ -563,7 +563,7 @@ namespace Language_cz {
   #if LCD_HEIGHT >= 4
     // Up to 3 lines allowed
     PROGMEM Language_Str MSG_ADVANCED_PAUSE_WAITING        = _UxGT(MSG_2_LINE("Stikněte tlačítko", "pro obnovení tisku"));
-    PROGMEM Language_Str MSG_PAUSE_PRINT_INIT              = _UxGT(MSG_1_LINE("Parkování..."));
+    PROGMEM Language_Str MSG_PAUSE_PRINT_PARKING           = _UxGT(MSG_1_LINE("Parkování..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INIT          = _UxGT(MSG_3_LINE("Čekejte prosím", "na zahájení", "výměny filamentu"));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INSERT        = _UxGT(MSG_3_LINE("Vložte filament", "a stiskněte", "tlačítko..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_HEAT          = _UxGT(MSG_2_LINE("Klikněte pro", "nahřátí trysky"));
@@ -576,7 +576,7 @@ namespace Language_cz {
   #else // LCD_HEIGHT < 4
     // Up to 2 lines allowed
     PROGMEM Language_Str MSG_ADVANCED_PAUSE_WAITING        = _UxGT(MSG_2_LINE("Stikněte tlač.", "pro obnovení"));
-    PROGMEM Language_Str MSG_PAUSE_PRINT_INIT              = _UxGT(MSG_1_LINE("Parkování..."));
+    PROGMEM Language_Str MSG_PAUSE_PRINT_PARKING           = _UxGT(MSG_1_LINE("Parkování..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INIT          = _UxGT(MSG_1_LINE("Čekejte..."));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_INSERT        = _UxGT(MSG_1_LINE("Vložte, klikněte"));
     PROGMEM Language_Str MSG_FILAMENT_CHANGE_HEAT          = _UxGT(MSG_2_LINE("Klikněte pro", "nahřátí"));

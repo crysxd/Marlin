@@ -26,7 +26,7 @@
  * UTF-8 for Graphical Display
  *
  * LCD Menu Messages
- * See also http://marlinfw.org/docs/development/lcd_language.html
+ * See also https://marlinfw.org/docs/development/lcd_language.html
  *
  */
 namespace Language_pt_br {
@@ -156,8 +156,8 @@ namespace Language_pt_br {
   PROGMEM Language_Str MSG_UBL_STORAGE_SLOT                = _UxGT("Slot de Memória");
   PROGMEM Language_Str MSG_UBL_LOAD_MESH                   = _UxGT("Ler Malha");
   PROGMEM Language_Str MSG_UBL_SAVE_MESH                   = _UxGT("Salvar Malha");
-  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("M117 Malha %i carregada");
-  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("M117 Malha %i salva");
+  PROGMEM Language_Str MSG_MESH_LOADED                     = _UxGT("Malha %i carregada");
+  PROGMEM Language_Str MSG_MESH_SAVED                      = _UxGT("Malha %i salva");
   PROGMEM Language_Str MSG_UBL_NO_STORAGE                  = _UxGT("Sem armazenamento");
   PROGMEM Language_Str MSG_UBL_SAVE_ERROR                  = _UxGT("Erro ao salvar UBL");
   PROGMEM Language_Str MSG_UBL_RESTORE_ERROR               = _UxGT("Erro no restauro UBL");
