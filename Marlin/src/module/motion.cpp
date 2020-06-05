@@ -348,6 +348,11 @@ void line_to_current_position(const feedRate_t &fr_mm_s/*=feedrate_mm_s*/) {
 
 #endif // IS_KINEMATIC
 
+/**
+ * Do a fast or normal move to 'destination' with an optional FR.
+ *  - Move at normal speed regardless of feedrate percentage.
+ *  - Extrude the specified length regardless of flow percentage.
+ */
 void _internal_move_to_destination(const feedRate_t &fr_mm_s/*=0.0f*/
   #if IS_KINEMATIC
     , const bool is_fast/*=false*/
@@ -360,8 +365,8 @@ void _internal_move_to_destination(const feedRate_t &fr_mm_s/*=0.0f*/
   feedrate_percentage = 100;
 
   #if EXTRUDERS
-     const float old_fac = planner.e_factor[active_extruder];
-     planner.e_factor[active_extruder] = 1.0f;
+    const float old_fac = planner.e_factor[active_extruder];
+    planner.e_factor[active_extruder] = 1.0f;
   #endif
 
   #if IS_KINEMATIC
@@ -1529,24 +1534,13 @@ void homeaxis(const AxisEnum axis) {
     // Only Z homing (with probe) is permitted
     if (axis != Z_AXIS) { BUZZ(100, 880); return; }
   #else
-    #define _CAN_HOME(A) \
-      (axis == _AXIS(A) && ((A##_MIN_PIN > -1 && A##_HOME_DIR < 0) || (A##_MAX_PIN > -1 && A##_HOME_DIR > 0)))
-    #if X_SPI_SENSORLESS
-      #define CAN_HOME_X true
-    #else
-      #define CAN_HOME_X _CAN_HOME(X)
-    #endif
-    #if Y_SPI_SENSORLESS
-      #define CAN_HOME_Y true
-    #else
-      #define CAN_HOME_Y _CAN_HOME(Y)
-    #endif
-    #if Z_SPI_SENSORLESS
-      #define CAN_HOME_Z true
-    #else
-      #define CAN_HOME_Z _CAN_HOME(Z)
-    #endif
-    if (!CAN_HOME_X && !CAN_HOME_Y && !CAN_HOME_Z) return;
+    #define _CAN_HOME(A) (axis == _AXIS(A) && ( \
+         ENABLED(A##_SPI_SENSORLESS) \
+      || (_AXIS(A) == Z_AXIS && ENABLED(HOMING_Z_WITH_PROBE)) \
+      || (A##_MIN_PIN > 0 && A##_HOME_DIR < 0) \
+      || (A##_MAX_PIN > 0 && A##_HOME_DIR > 0) \
+    ))
+    if (!_CAN_HOME(X) && !_CAN_HOME(Y) && !_CAN_HOME(Z)) return;
   #endif
 
   if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPAIR(">>> homeaxis(", axis_codes[axis], ")");
