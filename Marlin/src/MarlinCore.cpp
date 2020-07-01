@@ -59,10 +59,10 @@
 #include "gcode/parser.h"
 #include "gcode/queue.h"
 
-#if ENABLED(TFT_LITTLE_VGL_UI)
+#if ENABLED(TFT_LVGL_UI)
   #include "lvgl.h"
-  #include "lcd/extui/lib/mks_ui/inc/tft_lvgl_configuration.h"
-  #include "lcd/extui/lib/mks_ui/inc/draw_ui.h"
+  #include "lcd/extui/lib/mks_ui/tft_lvgl_configuration.h"
+  #include "lcd/extui/lib/mks_ui/draw_ui.h"
 #endif
 
 #if ENABLED(DWIN_CREALITY_LCD)
@@ -699,9 +699,6 @@ void idle(TERN_(ADVANCED_PAUSE_FEATURE, bool no_stepper_sleep/*=false*/)) {
   // Handle SD Card insert / remove
   TERN_(SDSUPPORT, card.manage_media());
 
-  // Handle UI input / draw events
-  TERN(DWIN_CREALITY_LCD, DWIN_Update(), ui.update());
-
   // Handle USB Flash Drive insert / remove
   TERN_(USB_FLASH_DRIVE_SUPPORT, Sd2Card::idle());
 
@@ -714,8 +711,8 @@ void idle(TERN_(ADVANCED_PAUSE_FEATURE, bool no_stepper_sleep/*=false*/)) {
   // Update the Beeper queue
   TERN_(USE_BEEPER, buzzer.tick());
 
-  // Read Buttons and Update the LCD
-  ui.update();
+  // Handle UI input / draw events
+  TERN(DWIN_CREALITY_LCD, DWIN_Update(), ui.update());
 
   // Run i2c Position Encoders
   #if ENABLED(I2C_POSITION_ENCODERS)
@@ -746,7 +743,7 @@ void idle(TERN_(ADVANCED_PAUSE_FEATURE, bool no_stepper_sleep/*=false*/)) {
   // Direct Stepping
   TERN_(DIRECT_STEPPING, page_manager.write_responses());
 
-  #if ENABLED(TFT_LITTLE_VGL_UI)
+  #if ENABLED(TFT_LVGL_UI)
     LV_TASK_HANDLER();
   #endif
 }
@@ -860,7 +857,7 @@ void setup() {
   #if ENABLED(MARLIN_DEV_MODE)
     auto log_current_ms = [&](PGM_P const msg) {
       SERIAL_ECHO_START();
-      SERIAL_CHAR('['); SERIAL_ECHO(millis()); SERIAL_ECHO("] ");
+      SERIAL_CHAR('['); SERIAL_ECHO(millis()); SERIAL_ECHOPGM("] ");
       serialprintPGM(msg);
       SERIAL_EOL();
     };
@@ -939,11 +936,11 @@ void setup() {
 
   // Check startup - does nothing if bootloader sets MCUSR to 0
   const byte mcu = HAL_get_reset_source();
-  if (mcu &  1) SERIAL_ECHOLNPGM(STR_POWERUP);
-  if (mcu &  2) SERIAL_ECHOLNPGM(STR_EXTERNAL_RESET);
-  if (mcu &  4) SERIAL_ECHOLNPGM(STR_BROWNOUT_RESET);
-  if (mcu &  8) SERIAL_ECHOLNPGM(STR_WATCHDOG_RESET);
-  if (mcu & 32) SERIAL_ECHOLNPGM(STR_SOFTWARE_RESET);
+  if (mcu & RST_POWER_ON) SERIAL_ECHOLNPGM(STR_POWERUP);
+  if (mcu & RST_EXTERNAL) SERIAL_ECHOLNPGM(STR_EXTERNAL_RESET);
+  if (mcu & RST_BROWN_OUT) SERIAL_ECHOLNPGM(STR_BROWNOUT_RESET);
+  if (mcu & RST_WATCHDOG) SERIAL_ECHOLNPGM(STR_WATCHDOG_RESET);
+  if (mcu & RST_SOFTWARE) SERIAL_ECHOLNPGM(STR_SOFTWARE_RESET);
   HAL_clear_reset_source();
 
   serialprintPGM(GET_TEXT(MSG_MARLIN));
@@ -989,20 +986,12 @@ void setup() {
     SETUP_RUN(ui.reset_status());     // Load welcome message early. (Retained if no errors exist.)
   #endif
 
-  #if BOTH(HAS_SPI_LCD, SHOW_BOOTSCREEN)
-    SETUP_RUN(ui.show_bootscreen());
-  #endif
-
   #if BOTH(SDSUPPORT, SDCARD_EEPROM_EMULATION)
     SETUP_RUN(card.mount());          // Mount media with settings before first_load
   #endif
 
   SETUP_RUN(settings.first_load());   // Load data from EEPROM if available (or use defaults)
                                       // This also updates variables in the planner, elsewhere
-
-  #if HAS_SERVICE_INTERVALS
-    SETUP_RUN(ui.reset_status(true)); // Show service messages or keep current status
-  #endif
 
   #if ENABLED(TOUCH_BUTTONS)
     SETUP_RUN(touch.init());
@@ -1147,7 +1136,7 @@ void setup() {
   #endif
 
   #if ENABLED(EXTERNAL_CLOSED_LOOP_CONTROLLER)
-    SETUP_RUN(init_closedloop());
+    SETUP_RUN(closedloop.init());
   #endif
 
   #ifdef STARTUP_COMMANDS
@@ -1191,7 +1180,8 @@ void setup() {
     SETUP_RUN(page_manager.init());
   #endif
 
-  #if ENABLED(TFT_LITTLE_VGL_UI)
+  #if ENABLED(TFT_LVGL_UI)
+    if (!card.isMounted()) SETUP_RUN(card.mount()); // Mount SD to load graphics and fonts
     SETUP_RUN(tft_lvgl_init());
   #endif
 
@@ -1227,7 +1217,7 @@ void loop() {
 
     endstops.event_handler();
 
-    TERN_(TFT_LITTLE_VGL_UI, printer_state_polling());
+    TERN_(TFT_LVGL_UI, printer_state_polling());
 
   } while (ENABLED(__AVR__)); // Loop forever on slower (AVR) boards
 }
