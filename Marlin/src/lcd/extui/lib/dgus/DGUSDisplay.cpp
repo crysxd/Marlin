@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -105,6 +105,10 @@ void DGUSDisplay::WriteVariable(uint16_t adr, int16_t value) {
 
 void DGUSDisplay::WriteVariable(uint16_t adr, uint8_t value) {
   WriteVariable(adr, static_cast<const void*>(&value), sizeof(uint8_t));
+}
+
+void DGUSDisplay::WriteVariable(uint16_t adr, int8_t value) {
+  WriteVariable(adr, static_cast<const void*>(&value), sizeof(int8_t));
 }
 
 void DGUSDisplay::WriteVariable(uint16_t adr, long value) {
