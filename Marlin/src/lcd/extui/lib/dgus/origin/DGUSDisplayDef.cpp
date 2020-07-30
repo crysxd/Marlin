@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -35,10 +35,12 @@
 #include "../../../../../module/planner.h"
 
 #include "../../../../ultralcd.h"
+#include "../../../ui_api.h"
 
 #if ENABLED(DGUS_UI_MOVE_DIS_OPTION)
   uint16_t distanceToMove = 10;
 #endif
+using namespace ExtUI;
 
 const uint16_t VPList_Boot[] PROGMEM = {
   VP_MARLIN_VERSION,
@@ -190,8 +192,9 @@ const struct DGUS_VP_Variable ListOfVP[] PROGMEM = {
 
   // Temperature Data
   #if HOTENDS >= 1
-    VPHELPER(VP_T_E0_Is, &thermalManager.temp_hotend[0].celsius, nullptr, ScreenHandler.DGUSLCD_SendFloatAsLongValueToDisplay<0>),
-    VPHELPER(VP_T_E0_Set, &thermalManager.temp_hotend[0].target, ScreenHandler.HandleTemperatureChanged, &ScreenHandler.DGUSLCD_SendWordValueToDisplay),
+    VPHELPER(VP_T_E0_Is, nullptr, nullptr, SET_VARIABLE(getActualTemp_celsius, E0, long)),
+    VPHELPER(VP_T_E0_Set, nullptr, GET_VARIABLE(setTargetTemp_celsius, E0),
+                                   SET_VARIABLE(getTargetTemp_celsius, E0)),
     VPHELPER(VP_Flowrate_E0, nullptr, ScreenHandler.HandleFlowRateChanged, &ScreenHandler.DGUSLCD_SendWordValueToDisplay),
     VPHELPER(VP_EPos, &destination.e, nullptr, ScreenHandler.DGUSLCD_SendFloatAsLongValueToDisplay<2>),
     VPHELPER(VP_MOVE_E0, nullptr, &ScreenHandler.HandleManualExtrude, nullptr),
