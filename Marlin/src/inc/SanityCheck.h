@@ -513,6 +513,10 @@
   #error "[XYZ]_HOME_BUMP_MM is now HOMING_BUMP_MM. Please update Configuration_adv.h."
 #elif defined(DIGIPOT_I2C)
   #error "DIGIPOT_I2C is now DIGIPOT_MCP4451 (or DIGIPOT_MCP4018). Please update Configuration_adv.h."
+#elif defined(TOUCH_BUTTONS)
+  #error "TOUCH_BUTTONS is now TOUCH_SCREEN. Please update your Configuration.h."
+#elif defined(ANYCUBIC_TFT_MODEL)
+  #error "ANYCUBIC_TFT_MODEL is now ANYCUBIC_LCD_I3MEGA. Please update your Configuration.h."
 #endif
 
 #ifdef FIL_RUNOUT_INVERTING
@@ -687,8 +691,8 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
   #elif PROGRESS_MSG_EXPIRE < 0
     #error "PROGRESS_MSG_EXPIRE must be greater than or equal to 0."
   #endif
-#elif ENABLED(LCD_SET_PROGRESS_MANUALLY) && NONE(HAS_GRAPHICAL_LCD, EXTENSIBLE_UI)
-  #error "LCD_SET_PROGRESS_MANUALLY requires LCD_PROGRESS_BAR, Graphical LCD, or EXTENSIBLE_UI."
+#elif ENABLED(LCD_SET_PROGRESS_MANUALLY) && NONE(HAS_GRAPHICAL_LCD, HAS_GRAPHICAL_TFT, EXTENSIBLE_UI)
+  #error "LCD_SET_PROGRESS_MANUALLY requires LCD_PROGRESS_BAR, Graphical LCD, TFT, or EXTENSIBLE_UI."
 #endif
 
 #if !HAS_LCD_MENU && ENABLED(SD_REPRINT_LAST_SELECTED_FILE)
@@ -817,7 +821,7 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
  */
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #if !HAS_RESUME_CONTINUE
-    #error "ADVANCED_PAUSE_FEATURE currently requires an LCD controller or EMERGENCY_PARSER."
+    #error "ADVANCED_PAUSE_FEATURE requires a supported LCD controller (or EMERGENCY_PARSER)."
   #elif DISABLED(NOZZLE_PARK_FEATURE)
     #error "ADVANCED_PAUSE_FEATURE requires NOZZLE_PARK_FEATURE."
   #elif !defined(FILAMENT_UNLOAD_PURGE_FEEDRATE)
@@ -2071,6 +2075,13 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
 #endif
 
 /**
+ * G35 Assisted Tramming
+ */
+#if ENABLED(ASSISTED_TRAMMING) && !HAS_BED_PROBE
+  #error "ASSISTED_TRAMMING requires a bed probe."
+#endif
+
+/**
  * G38 Probe Target
  */
 #if ENABLED(G38_PROBE_TARGET)
@@ -2216,6 +2227,9 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
   + ENABLED(OLED_PANEL_TINYBOY2) \
   + ENABLED(MKS_12864OLED) \
   + ENABLED(MKS_12864OLED_SSD1306) \
+  + ENABLED(ZONESTAR_12864LCD) \
+  + ENABLED(ZONESTAR_12864OLED) \
+  + ENABLED(ZONESTAR_12864OLED_SSD1306) \
   + ENABLED(U8GLIB_SH1106_EINSTART) \
   + ENABLED(OVERLORD_OLED) \
   + ENABLED(FYSETC_242_OLED_12864) \
@@ -2224,10 +2238,14 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
   + ENABLED(DGUS_LCD_UI_HIPRECY) \
   + ENABLED(MALYAN_LCD) \
   + ENABLED(TOUCH_UI_FTDI_EVE) \
+  + ENABLED(TFT_320x240) \
+  + ENABLED(TFT_320x240_SPI) \
   + ENABLED(FSMC_GRAPHICAL_TFT) \
   + ENABLED(TFT_LVGL_UI_FSMC) \
-  + ENABLED(TFT_LVGL_UI_SPI)
-  #error "Please select no more than one LCD controller option."
+  + ENABLED(TFT_LVGL_UI_SPI) \
+  + ENABLED(ANYCUBIC_LCD_I3MEGA) \
+  + ENABLED(ANYCUBIC_LCD_CHIRON)
+  #error "Please select only one LCD controller option."
 #endif
 
 #undef IS_RRD_SC
@@ -3043,18 +3061,18 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
 /**
  * Touch Buttons
  */
-#if ENABLED(TOUCH_BUTTONS)
+#if ENABLED(TOUCH_SCREEN)
   #ifndef XPT2046_X_CALIBRATION
-    #error "XPT2046_X_CALIBRATION must be defined with TOUCH_BUTTONS."
+    #error "XPT2046_X_CALIBRATION must be defined with TOUCH_SCREEN."
   #endif
   #ifndef XPT2046_Y_CALIBRATION
-    #error "XPT2046_Y_CALIBRATION must be defined with TOUCH_BUTTONS."
+    #error "XPT2046_Y_CALIBRATION must be defined with TOUCH_SCREEN."
   #endif
   #ifndef XPT2046_X_OFFSET
-    #error "XPT2046_X_OFFSET must be defined with TOUCH_BUTTONS."
+    #error "XPT2046_X_OFFSET must be defined with TOUCH_SCREEN."
   #endif
   #ifndef XPT2046_Y_OFFSET
-    #error "XPT2046_Y_OFFSET must be defined with TOUCH_BUTTONS."
+    #error "XPT2046_Y_OFFSET must be defined with TOUCH_SCREEN."
   #endif
 #endif
 
@@ -3063,6 +3081,17 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
  */
 #if EITHER(ESP3D_WIFISUPPORT, WIFISUPPORT) && DISABLED(ARDUINO_ARCH_ESP32)
   #error "ESP3D_WIFISUPPORT or WIFISUPPORT requires an ESP32 controller."
+#endif
+
+/**
+ * Sanity Check for Password Feature
+ */
+#if ENABLED(PASSWORD_FEATURE)
+  #if NONE(HAS_LCD_MENU, PASSWORD_UNLOCK_GCODE, PASSWORD_CHANGE_GCODE)
+    #error "Without PASSWORD_UNLOCK_GCODE, PASSWORD_CHANGE_GCODE, or a supported LCD there's no way to unlock the printer or set a password."
+  #elif DISABLED(EEPROM_SETTINGS)
+    #warning "PASSWORD_FEATURE settings will be lost on power-off without EEPROM_SETTINGS."
+  #endif
 #endif
 
 // Misc. Cleanup
